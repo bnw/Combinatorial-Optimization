@@ -54,7 +54,7 @@ void Reader::create_edge(std::unique_ptr<ED::Graph> const &graph, std::istringst
 	assert(w > 0);
 	assert(v <= graph->num_nodes());
 	assert(w <= graph->num_nodes());
-	graph->add_edge(v - 1, w - 1);
+	graph->add_edge(ED::dimacs_id_to_ED_id(v), ED::dimacs_id_to_ED_id(w));
 }
 
 }
