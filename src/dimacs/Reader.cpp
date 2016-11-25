@@ -5,9 +5,9 @@
 
 namespace dimacs {
 
-std::unique_ptr<ED::Graph> Reader::read(std::istream &input)
+std::unique_ptr<ShrinkableGraph> Reader::read(std::istream &input) const
 {
-	std::unique_ptr<ED::Graph> graph = nullptr;
+	std::unique_ptr<ShrinkableGraph> graph = nullptr;
 	while (input) {
 		std::string line_buffer;
 		std::getline(input, line_buffer);
@@ -30,24 +30,21 @@ std::unique_ptr<ED::Graph> Reader::read(std::istream &input)
 				throw "Unknown line start '" + std::string(&command, 1) + "' in input.";
 		}
 	}
-	assert(graph);
 	return graph;
 }
 
-void Reader::create_graph(std::unique_ptr<ED::Graph> &graph, std::istringstream &line_stream)
+void Reader::create_graph(std::unique_ptr<ShrinkableGraph> &graph, std::istringstream &line_stream) const
 {
-	assert(not graph);
 	std::string type;
 	size_t n, m;
 	line_stream >> type >> n >> m;
 	assert(type == "edge");
-	graph = std::unique_ptr<ED::Graph>(new ED::Graph(n));
+	graph = std::unique_ptr<ShrinkableGraph>(new ShrinkableGraph(n));
 }
 
-void Reader::create_edge(std::unique_ptr<ED::Graph> const &graph, std::istringstream &line_stream)
+void Reader::create_edge(std::unique_ptr<ShrinkableGraph> const &graph, std::istringstream &line_stream) const
 {
 	auto x = line_stream.str();
-	assert(graph);
 	ED::NodeId v, w;
 	line_stream >> v >> w;
 	assert(v > 0);

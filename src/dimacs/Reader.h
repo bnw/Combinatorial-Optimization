@@ -4,18 +4,19 @@
 #include <string>
 #include <graph.hpp>
 #include <memory>
+#include <ShrinkableGraph.h>
 
 namespace dimacs {
 
 class Reader
 {
 public:
-	std::unique_ptr<ED::Graph> read(std::istream &input);
+	std::unique_ptr<ShrinkableGraph> read(std::istream &input) const;
 
 private:
-	void create_graph(std::unique_ptr<ED::Graph> &graph, std::istringstream &line_stream);
+	void create_graph(std::unique_ptr<ShrinkableGraph> &graph, std::istringstream &line_stream) const;
 
-	void create_edge(std::unique_ptr<ED::Graph> const &graph, std::istringstream &line_stream);
+	void create_edge(std::unique_ptr<ShrinkableGraph> const &graph, std::istringstream &line_stream) const;
 };
 
 }
