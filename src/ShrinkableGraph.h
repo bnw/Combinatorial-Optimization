@@ -4,7 +4,9 @@
 #include <graph.hpp>
 #include "Edge.h"
 #include "utils.h"
+#include "UnevenCircuit.h"
 #include <vector>
+#include <memory>
 
 class ShrinkableGraph : public ED::Graph
 {
@@ -14,9 +16,19 @@ public:
 	ShrinkableGraph(size_type const num_nodes) :
 			Graph(num_nodes),
 			partition_classes(create_0_to_n_minus_one<PartitionClassId>(num_nodes)),
+			pseudo_nodes(num_nodes, false),
 			node_ids(create_0_to_n_minus_one<NodeId>(num_nodes))
 	{}
 
+	void shrink_circuit(UnevenCircuit const &uneven_circuit)
+	{
+		shrunken_circuits.push_front(uneven_circuit);
+		for (auto const &edge : uneven_circuit.get_edges()) {
+			shrink_edge(edge.first_node_id(), edge.second_node_id());
+		}
+	}
+
+	//public for unit tests
 	void shrink_edge(NodeId const node_a_id, NodeId const node_b_id)
 	{
 		//Note: This could be done faster
@@ -47,6 +59,11 @@ public:
 			   and is_pseudo_node(edge.second_node_id());
 	}
 
+	std::list<UnevenCircuit> const &get_shrunken_circuits() const
+	{
+		return shrunken_circuits;
+	}
+
 private:
 	PartitionClassId get_partition_class_id(NodeId const node_id) const
 	{
@@ -71,6 +88,7 @@ private:
 	std::vector<PartitionClassId> partition_classes;
 	std::vector<bool> pseudo_nodes;
 	std::vector<NodeId> const node_ids;
+	std::list<UnevenCircuit> shrunken_circuits;
 };
 
 #endif //COMBINATORIAL_OPTIMIZATION_SHRINKABLEGRAPH_H
