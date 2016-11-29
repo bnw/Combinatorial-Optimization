@@ -30,6 +30,9 @@ std::unique_ptr<ShrinkableGraph> Reader::read(std::istream &input) const
 				throw "Unknown line start '" + std::string(&command, 1) + "' in input.";
 		}
 	}
+	if(not graph){
+		throw "Error while reading graph";
+	}
 	return graph;
 }
 
