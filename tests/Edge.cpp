@@ -18,3 +18,10 @@ BOOST_AUTO_TEST_CASE(EdgeOtherVertex)
 	BOOST_CHECK(a.other_vertex(1) == 2);
 	BOOST_CHECK(a.other_vertex(2) == 1);
 }
+BOOST_AUTO_TEST_CASE(EdgeReverse)
+{
+	Edge a(1, 2);
+	Edge a_reverse = a.reverse();
+	BOOST_CHECK(a.first_node_id() == a_reverse.second_node_id());
+	BOOST_CHECK(a_reverse.first_node_id() == a.second_node_id());
+}

@@ -7,18 +7,18 @@
 BOOST_FIXTURE_TEST_CASE(AlternatingTreeEdgeAdd, K4Fixture)
 {
 	AlternatingTree T(G, 0);
-	T.add_edge({0,1});
+	T.add_edge({0, 1});
 	BOOST_TEST(T.is_even(0));
 	BOOST_TEST(T.is_odd(1));
-	BOOST_TEST(T.contains(0));
-	BOOST_TEST(T.contains(1));
-	BOOST_TEST(not T.contains(2));
-	BOOST_TEST(not T.contains(3));
+	BOOST_TEST(T.contains_node(0));
+	BOOST_TEST(T.contains_node(1));
+	BOOST_TEST(not T.contains_node(2));
+	BOOST_TEST(not T.contains_node(3));
 }
 
 BOOST_AUTO_TEST_CASE(FindPath)
 {
-	ED::Graph G(6);
+	ShrinkableGraph G(6);
 	G.add_edge(0, 1);
 	G.add_edge(0, 2);
 	G.add_edge(0, 3);
@@ -38,4 +38,31 @@ BOOST_AUTO_TEST_CASE(FindPath)
 	std::set<Edge> actual(path.begin(), path.end());
 	BOOST_TEST(expected == actual);
 	BOOST_TEST(actual.size() == path.size()); //no duplicates
+}
+
+BOOST_AUTO_TEST_CASE(FindSimplePath)
+{
+	ShrinkableGraph G(6);
+	G.add_edge(0, 1);
+	G.add_edge(1, 2);
+	AlternatingTree T(G, 0);
+	T.add_edge({0, 1});
+	T.add_edge({1, 2});
+	auto const actual = T.find_path(2, 0);
+	std::vector<Edge> expected = {{2, 1},
+								  {1, 0},};
+	BOOST_TEST(expected == actual);
+}
+
+BOOST_AUTO_TEST_CASE(GetNodes)
+{
+	ShrinkableGraph G(6);
+	G.add_edge(0, 1);
+	G.add_edge(1, 2);
+	AlternatingTree T(G, 0);
+	T.add_edge({0, 1});
+	T.add_edge({1, 2});
+	auto const actual = T.get_nodes();
+	std::vector<NodeId> const expected = {0, 1, 2};
+	BOOST_TEST(expected == actual);
 }

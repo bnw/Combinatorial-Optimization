@@ -3,7 +3,7 @@
 #include "fixtures.h"
 
 
-BOOST_FIXTURE_TEST_CASE(Shrinking, K4Fixture)
+BOOST_FIXTURE_TEST_CASE(ShrinkingEdge, K4Fixture)
 {
 	G.shrink_edge(0,1);
 	G.shrink_edge(1,2);
@@ -11,4 +11,16 @@ BOOST_FIXTURE_TEST_CASE(Shrinking, K4Fixture)
 	BOOST_TEST(G.is_contracted_edge({1,2}));
 	BOOST_TEST(G.is_contracted_edge({0,2}));
 	BOOST_TEST(not G.is_contracted_edge({0,3}));
+}
+
+BOOST_FIXTURE_TEST_CASE(ShrinkingCircuit, K5Fixture)
+{
+	UnevenCircuit circuit_1{G, {{0,1},{1,2},{2,0}}};
+	UnevenCircuit circuit_2{G, {{2,3},{3,4},{4,2}}};
+	G.shrink_circuit(circuit_1);
+	G.shrink_circuit(circuit_2);
+	std::list<UnevenCircuit> expected = {circuit_2, circuit_1};
+	BOOST_TEST(expected == G.get_shrunken_circuits());
+	BOOST_TEST(G.is_contracted_edge({0,1}));
+	BOOST_TEST(G.is_contracted_edge({0,4}));
 }
