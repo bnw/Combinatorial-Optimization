@@ -12,7 +12,7 @@
 #include "ShrinkableGraph.h"
 #include "utils.h"
 #include "UnevenCircuit.h"
-#include "CardinalityMatchingAlgorithm.h"
+#include "algorithms/CardinalityMatchingAlgorithm.h"
 
 
 int main(int argc, const char *argv[])
@@ -60,7 +60,7 @@ int main(int argc, const char *argv[])
 		dimacs::Reader const reader{};
 		std::ifstream file("instances\\" + instance.name + ".dmx");
 		auto G = reader.read(file);
-		auto const M = CardinalityMatchingAlgorithm().run(*G);
+		auto const M = algorithms::CardinalityMatchingAlgorithm().run(*G);
 		std::cout << instance.name << ": " << M.get_num_edges() << std::endl;
 		assert(instance.max_cardinality == M.get_num_edges());
 	}

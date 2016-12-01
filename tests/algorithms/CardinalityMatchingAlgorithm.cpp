@@ -1,6 +1,8 @@
 #include <boost/test/unit_test.hpp>
-#include <CardinalityMatchingAlgorithm.h>
-#include "fixtures.h"
+#include <algorithms/CardinalityMatchingAlgorithm.h>
+#include "../fixtures.h"
+
+using namespace algorithms;
 
 BOOST_AUTO_TEST_CASE(CardinalityMatchingAlgorithmPath)
 {

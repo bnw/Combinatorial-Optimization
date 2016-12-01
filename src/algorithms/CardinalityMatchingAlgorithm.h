@@ -4,6 +4,9 @@
 #include <iostream>
 #include "Matching.h"
 #include "AlternatingTree.h"
+#include "MatchingUnshrinkAlgorithm.h"
+
+namespace algorithms {
 
 class CardinalityMatchingAlgorithm
 {
@@ -38,7 +41,7 @@ public:
 						}
 					}
 					G.shrink_circuit(C);
-					T->shrink_circuit(edge, C, M);
+					T->shrink_circuit(C);
 					M.remove_edges_if_contained(circuit_edges);
 				} else if (even_vertices.size() == 1) {
 					auto const even_vertex = even_vertices.at(0);
@@ -50,7 +53,7 @@ public:
 						auto augmenting_path = T->find_path_from_root_to_node(even_vertex);
 						augmenting_path.push_back(edge);
 						M.augment(augmenting_path);
-						M.unshrink();
+						MatchingUnshrinkAlgorithm(M, G);
 						if (M.is_perfect()) {
 							std::cout << "Found perfect matching with " << M.get_num_edges() << " edges!"
 									  << std::endl;
@@ -72,7 +75,7 @@ public:
 				}
 			}
 			//TODO remove debug
-			M.unshrink();
+			MatchingUnshrinkAlgorithm(M, G);
 			G.reset();
 			G.deactivate_nodes(T->get_nodes());
 
@@ -82,5 +85,7 @@ public:
 		return M;
 	}
 };
+
+}
 
 #endif //COMBINATORIAL_OPTIMIZATION_CARDINALITYMATCHINGALGORITHM_H
