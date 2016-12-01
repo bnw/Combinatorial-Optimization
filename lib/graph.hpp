@@ -120,7 +120,7 @@ public:
       @warning Does not check that the edge does not already exist, so this class can be used to model non-simple
       graphs.
    **/
-   void add_edge (NodeId const node1_id, NodeId const node2_id);
+   virtual void add_edge (NodeId const node1_id, NodeId const node2_id);
 
 private:
    std::vector<Node> _nodes;

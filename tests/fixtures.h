@@ -3,40 +3,25 @@
 
 #include <ShrinkableGraph.h>
 
-struct K4Fixture
+
+template<size_t n>
+struct KnFixture
 {
-	K4Fixture()
-			: G(4)
+	KnFixture()
+			: G(n)
 	{
-		G.add_edge(0, 1);
-		G.add_edge(0, 2);
-		G.add_edge(0, 3);
-		G.add_edge(1, 2);
-		G.add_edge(1, 3);
-		G.add_edge(2, 3);
+		for (size_t i = 0; i < n; i++) {
+			for (size_t j = i + 1; j < n; j++) {
+				G.add_edge(i, j);
+			}
+		}
 	}
 
 	ShrinkableGraph G;
 };
 
-struct K5Fixture
-{
-	K5Fixture()
-			: G(5)
-	{
-		G.add_edge(0, 1);
-		G.add_edge(0, 2);
-		G.add_edge(0, 3);
-		G.add_edge(0, 4);
-		G.add_edge(1, 2);
-		G.add_edge(1, 3);
-		G.add_edge(1, 4);
-		G.add_edge(2, 3);
-		G.add_edge(2, 4);
-		G.add_edge(3, 4);
-	}
+struct K4Fixture : public KnFixture<4>{};
 
-	ShrinkableGraph G;
-};
+struct K5Fixture : public KnFixture<5>{};
 
 #endif //COMBINATORIAL_OPTIMIZATION_FIXTURES_H

@@ -22,23 +22,24 @@ public:
 				if (G.is_contracted_edge(edge) or T->contains_edge(edge)) {
 					continue;
 				}
-				auto even_vertices = filter<NodeId>(edge.get_node_ids(), [&](NodeId n) { return T->is_even(n); });
+				auto even_vertices = filter<NodeId>(
+						edge.get_node_ids(),
+						[&](NodeId n) { return T->is_even(n); }
+				);
 				if (even_vertices.size() == 2) {
 					auto circuit_edges = T->find_path(even_vertices.at(0), even_vertices.at(1));
 					circuit_edges.push_back({even_vertices.at(1), even_vertices.at(0)});
 					//TODO
 					UnevenCircuit C(G, circuit_edges);
-					G.shrink_circuit(C);
-					M.remove_edges_if_contained(circuit_edges);
-					for (auto const odd_node_id : T->get_odd_nodes()) {
-						//TODO TODO
-						for(auto node : C.get_node_ids()){
-							if(node == odd_node_id){
-
-								append(L, G.get_incident_edges(odd_node_id));
-							}
+					for (auto const node_id : C.get_node_ids()) {
+						assert(T->contains_node(node_id));
+						if (T->is_odd(node_id)) {
+							append(L, G.get_incident_edges(node_id));
 						}
 					}
+					G.shrink_circuit(C);
+					T->shrink_circuit(edge, C, M);
+					M.remove_edges_if_contained(circuit_edges);
 				} else if (even_vertices.size() == 1) {
 					auto const even_vertex = even_vertices.at(0);
 					auto const other_vertex = edge.other_vertex(even_vertex);
@@ -49,11 +50,11 @@ public:
 						auto augmenting_path = T->find_path_from_root_to_node(even_vertex);
 						augmenting_path.push_back(edge);
 						M.augment(augmenting_path);
-						auto const M_unshrinked = M.unshrink();
-						if (M_unshrinked.is_perfect()) {
-							std::cout << "Found perfect matching with " << M_unshrinked.get_num_edges() << " edges!"
+						M = M.unshrink();
+						if (M.is_perfect()) {
+							std::cout << "Found perfect matching with " << M.get_num_edges() << " edges!"
 									  << std::endl;
-							return M_unshrinked;
+							return M;
 						}
 						G.reset();
 						auto const new_root = M.get_one_exposed();
@@ -61,6 +62,7 @@ public:
 						L = G.get_incident_edges(new_root);
 					} else {
 						assert(M.is_covered(other_vertex));
+						assert(not T->contains_node(other_vertex));
 						T->add_edge(edge);
 						auto const covering_edge = M.get_covering_edge(other_vertex);
 						auto const z = covering_edge.other_vertex(other_vertex);
@@ -70,16 +72,16 @@ public:
 				}
 			}
 			//TODO remove debug
-			auto const M_old = M;
-
 			M = M.unshrink();
 			G.reset();
 			G.deactivate_nodes(T->get_nodes());
 
+//			std::cout << "|M| = " << M.get_num_edges()
+//					  << ", G.num_active_nodes = " << G.get_num_active_nodes() << std::endl;
+
 			//TODO remove debug
-			T.release();
-			for(NodeId n = 0; n < G.num_nodes(); n++){
-				if(M.is_covered(n)){
+			for (NodeId n = 0; n < G.num_nodes(); n++) {
+				if (M.is_covered(n)) {
 					assert(G.is_active(M.get_covering_edge(n).other_vertex(n)) == G.is_active(n));
 				}
 			}

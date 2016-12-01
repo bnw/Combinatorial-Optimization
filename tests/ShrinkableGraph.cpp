@@ -19,8 +19,9 @@ BOOST_FIXTURE_TEST_CASE(ShrinkingCircuit, K5Fixture)
 	UnevenCircuit circuit_2{G, {{2,3},{3,4},{4,2}}};
 	G.shrink_circuit(circuit_1);
 	G.shrink_circuit(circuit_2);
-	std::list<UnevenCircuit> expected = {circuit_2, circuit_1};
-	BOOST_TEST(expected == G.get_shrunken_circuits());
+	BOOST_CHECK(circuit_1 == *G.get_shrunken_circuits().at(0));
+	BOOST_CHECK(circuit_2 == *G.get_shrunken_circuits().at(1));
+	BOOST_TEST(2 == G.get_shrunken_circuits().size());
 	BOOST_TEST(G.is_contracted_edge({0,1}));
 	BOOST_TEST(G.is_contracted_edge({0,4}));
 }

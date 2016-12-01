@@ -2,6 +2,7 @@
 #define COMBINATORIAL_OPTIMIZATION_UTILS_H
 
 #include <numeric>
+#include <algorithm>
 #include <functional>
 
 /**
@@ -13,6 +14,14 @@ std::vector<Scalar> create_0_to_n_minus_one(Scalar const n)
 	std::vector<Scalar> elements(n);
 	std::iota(elements.begin(), elements.end(), 0);
 	return elements;
+}
+
+template<typename ResultType, typename Container, typename Filter>
+std::vector<ResultType> transform(Container const &container, Filter const &filter)
+{
+	std::vector<ResultType> result;
+	std::transform(container.begin(), container.end(), std::inserter(result, result.begin()), filter);
+	return result;
 }
 
 /**

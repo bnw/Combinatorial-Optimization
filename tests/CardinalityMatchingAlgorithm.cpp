@@ -26,3 +26,20 @@ BOOST_FIXTURE_TEST_CASE(CardinalityMatchingAlgorithmK5, K5Fixture)
 	auto const matching = CardinalityMatchingAlgorithm().run(G);
 	BOOST_TEST(2 == matching.get_num_edges());
 }
+
+BOOST_FIXTURE_TEST_CASE(CardinalityMatchingAlgorithmK50, KnFixture<50>)
+{
+	auto const matching = CardinalityMatchingAlgorithm().run(G);
+	BOOST_TEST(25 == matching.get_num_edges());
+}
+
+BOOST_AUTO_TEST_CASE(CardinalityMatchingAlgorithmSimple)
+{
+	ShrinkableGraph G(4);
+	G.add_edge(0, 1);
+	G.add_edge(0, 2);
+	G.add_edge(1, 2);
+	G.add_edge(2, 3);
+	auto const matching = CardinalityMatchingAlgorithm().run(G);
+	BOOST_TEST(2 == matching.get_num_edges());
+}
