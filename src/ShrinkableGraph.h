@@ -49,16 +49,8 @@ public:
 		shared_uneven_circuit->set_id(shrunken_circuits.size());
 		shrunken_circuits.push_back(shared_uneven_circuit);
 
-		//TODO remove debug
-		for(auto const&edge : uneven_circuit.get_edges()){
-			assert(not is_contracted_edge(edge));
-		}
-
-		//TODO remove debug
-		int num_contracted_edges = 0;
 		for (auto const &edge : uneven_circuit.get_edges()) {
 			assert(is_active(edge));
-			num_contracted_edges += is_contracted_edge(edge);
 			if (not is_contracted_edge(edge)) {
 				shrink_edge(edge.first_node_id(), edge.second_node_id());
 			}
@@ -66,9 +58,6 @@ public:
 				circuits_by_node.at(node_id).push_back(shared_uneven_circuit);
 			}
 		}
-
-		//TODO
-//		assert(num_contracted_edges == 1);
 	}
 
 	//public for unit tests
@@ -102,8 +91,6 @@ public:
 	{
 		assert(is_active(edge));
 		return are_equal(edge.first_node_id(), edge.second_node_id());
-//		return is_pseudo_node(edge.first_node_id())
-//			   and is_pseudo_node(edge.second_node_id());
 	}
 
 	std::vector<UnevenCircuit::SharedPtr> const &get_shrunken_circuits() const
@@ -120,15 +107,6 @@ public:
 	bool are_equal(NodeId const node_id_a, NodeId const node_id_b) const
 	{
 		return get_partition_class_id(node_id_a) == get_partition_class_id(node_id_b);
-	}
-
-	bool are_equal(Edge const &edge_a, Edge const &edge_b) const
-	{
-		return (get_partition_class_id(edge_a.first_node_id()) == get_partition_class_id(edge_b.first_node_id())
-				and get_partition_class_id(edge_a.second_node_id()) == get_partition_class_id(edge_b.second_node_id()))
-			   or
-			   (get_partition_class_id(edge_a.first_node_id()) == get_partition_class_id(edge_b.second_node_id())
-				and get_partition_class_id(edge_a.second_node_id()) == get_partition_class_id(edge_b.first_node_id()));
 	}
 
 	PartitionClassId get_partition_class_id(NodeId const node_id) const
@@ -166,7 +144,6 @@ public:
 	}
 
 private:
-
 	void set_partition_class_id(NodeId const node_id, PartitionClassId const partition_class_id)
 	{
 		partition_classes.at(node_id) = partition_class_id;

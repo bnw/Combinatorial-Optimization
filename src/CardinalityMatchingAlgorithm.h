@@ -50,7 +50,7 @@ public:
 						auto augmenting_path = T->find_path_from_root_to_node(even_vertex);
 						augmenting_path.push_back(edge);
 						M.augment(augmenting_path);
-						M = M.unshrink();
+						M.unshrink();
 						if (M.is_perfect()) {
 							std::cout << "Found perfect matching with " << M.get_num_edges() << " edges!"
 									  << std::endl;
@@ -72,19 +72,12 @@ public:
 				}
 			}
 			//TODO remove debug
-			M = M.unshrink();
+			M.unshrink();
 			G.reset();
 			G.deactivate_nodes(T->get_nodes());
 
 //			std::cout << "|M| = " << M.get_num_edges()
 //					  << ", G.num_active_nodes = " << G.get_num_active_nodes() << std::endl;
-
-			//TODO remove debug
-			for (NodeId n = 0; n < G.num_nodes(); n++) {
-				if (M.is_covered(n)) {
-					assert(G.is_active(M.get_covering_edge(n).other_vertex(n)) == G.is_active(n));
-				}
-			}
 		}
 		return M;
 	}

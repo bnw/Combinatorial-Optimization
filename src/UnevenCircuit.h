@@ -30,32 +30,6 @@ public:
 
 	bool operator==(UnevenCircuit const &rhs) const;
 
-	Edge::Vector const get_even_path(NodeId const node_id_a, NodeId const node_id_b) const
-	{
-		enum part_names
-		{
-			LEFT = 0,
-			MIDDLE = 1,
-			RIGHT = 2
-		};
-		std::vector<Edge::Vector> parts(3);
-		auto current_part_name = LEFT;
-		for (auto const &edge : edges) {
-			if (edge.first_node_id() == node_id_a or edge.first_node_id() == node_id_b) {
-				current_part_name = (part_names) (current_part_name + 1);
-			}
-			parts.at(current_part_name).push_back(edge);
-		}
-		assert(current_part_name == RIGHT);
-		if (parts.at(MIDDLE).size() % 2 == 0) {
-			return parts.at(MIDDLE);
-		} else {
-			append(parts.at(LEFT), parts.at(RIGHT));
-			assert(parts.at(LEFT).size() % 2 == 0);
-			return parts.at(LEFT);
-		}
-	}
-
 	void set_id(size_t id);
 
 	size_t get_id() const;

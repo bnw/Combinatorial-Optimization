@@ -18,20 +18,12 @@ public:
 			graph(graph)
 	{}
 
-	Matching unshrink() const
+	void unshrink()
 	{
-		//TODO remove debug
-		for (auto &circuit : graph.get_shrunken_circuits()) {
-			using namespace std::placeholders;
-			auto const covered_node_ids
-					= filter<NodeId>(circuit->get_node_ids(), std::bind(&Matching::is_covered, this, _1));
-			assert(covered_node_ids.size() < 2);
-		}
-
 		Matching M = *this;
 
 		auto const num_circuits = graph.get_shrunken_circuits().size();
-		std::vector<NodeId> nodes_to_expand = M.get_covered_nodes();
+		std::vector<NodeId> nodes_to_expand = get_covered_nodes();
 		std::vector<bool> circuit_already_expanded(num_circuits, false);
 
 		auto const expand_outermost_circuit = [&]() {
@@ -44,7 +36,7 @@ public:
 				circuit_already_expanded.at(circuit.get_id()) = true;
 				auto const some_circuit_node = circuit.get_node_ids().front();
 				auto const new_matching_edges = circuit.get_matching_edges_that_expose_one(some_circuit_node);
-				M.add_edges(new_matching_edges);
+				add_edges(new_matching_edges);
 				for(auto const& edge : new_matching_edges){
 					append(nodes_to_expand, edge.get_node_ids());
 				}
@@ -68,7 +60,7 @@ public:
 				}
 				circuit_already_expanded.at(circuit->get_id()) = true;
 				auto const new_matching_edges = circuit->get_matching_edges_that_expose_one(node_id);
-				M.add_edges(new_matching_edges);
+				add_edges(new_matching_edges);
 				for(auto const& edge : new_matching_edges){
 					append(nodes_to_expand, edge.get_node_ids());
 				}
@@ -82,34 +74,6 @@ public:
 		for(auto has_been_expanded : circuit_already_expanded){
 			assert(has_been_expanded);
 		}
-
-
-//
-//		for (auto circuit_it = graph.get_shrunken_circuits().begin();
-//			 circuit_it != graph.get_shrunken_circuits().end(); circuit_it++) {
-//			auto const &circuit = *circuit_it;
-////		for (auto const &circuit : graph.get_shrunken_circuits()) {
-//			i++;
-//			using namespace std::placeholders;
-//
-//			auto const covered_node_ids
-//					= filter<NodeId>(circuit->get_node_ids(), std::bind(&Matching::is_covered, &M, _1));
-//
-//			//TODO remove debug
-//			for (auto n : covered_node_ids) {
-//				assert(M.is_covered(n));
-//			}
-//
-//			assert(covered_node_ids.size() <= 1);
-//			NodeId exposed_node;
-//			if (covered_node_ids.size() == 1) {
-//				exposed_node = covered_node_ids.at(0);
-//			} else {
-//				exposed_node = circuit->get_node_ids().front();
-//			}
-//			M.add_edges(circuit->get_matching_edges_that_expose_one(exposed_node));
-//		}
-		return M;
 	}
 
 	//TODO write with filter
@@ -192,7 +156,6 @@ public:
 		Edge::Vector new_edges;
 		for (auto const &edge : augmenting_path) {
 			assert(graph.is_active(edge));
-//			assert(not graph.is_contracted_edge(edge));
 			if (contains_edge(edge)) {
 				remove_edge(edge);
 			} else {
@@ -255,15 +218,6 @@ public:
 	void set_covering_edge(NodeId const node_id, Edge const &edge)
 	{
 		covering_edges.at(node_id) = edge;
-	}
-
-	Matching &operator=(Matching const &other)
-	{
-		covering_edges = other.covering_edges;
-		covered_nodes = other.covered_nodes;
-		num_edges = other.num_edges;
-		assert(&graph == &other.graph);
-		return *this;
 	}
 
 private:
