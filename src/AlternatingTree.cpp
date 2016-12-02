@@ -18,7 +18,7 @@ void AlternatingTree::add_edge(Edge const &edge)
 	ingoing_edges.at(new_node_id) = edges.back();
 }
 
-void AlternatingTree::shrink_circuit(UnevenCircuit const &C)
+void AlternatingTree::shrink_circuit(OddCircuit const &C)
 {
 	for (auto n : C.get_node_ids()) {
 		node_types.at(n) = EVEN;

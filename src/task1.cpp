@@ -11,7 +11,7 @@
 #include "AlternatingTree.h"
 #include "ShrinkableGraph.h"
 #include "utils.h"
-#include "UnevenCircuit.h"
+#include "OddCircuit.h"
 #include "algorithms/CardinalityMatchingAlgorithm.h"
 
 

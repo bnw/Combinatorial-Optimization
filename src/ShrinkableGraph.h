@@ -4,7 +4,7 @@
 #include <graph.hpp>
 #include "Edge.h"
 #include "utils.h"
-#include "UnevenCircuit.h"
+#include "OddCircuit.h"
 #include <vector>
 #include <memory>
 
@@ -43,9 +43,9 @@ public:
 		}
 	}
 
-	void shrink_circuit(UnevenCircuit const &uneven_circuit)
+	void shrink_circuit(OddCircuit const &uneven_circuit)
 	{
-		auto const shared_uneven_circuit = std::make_shared<UnevenCircuit>(uneven_circuit);
+		auto const shared_uneven_circuit = std::make_shared<OddCircuit>(uneven_circuit);
 		shared_uneven_circuit->set_id(shrunken_circuits.size());
 		shrunken_circuits.push_back(shared_uneven_circuit);
 
@@ -93,7 +93,7 @@ public:
 		return are_equal(edge.first_node_id(), edge.second_node_id());
 	}
 
-	std::vector<UnevenCircuit::SharedPtr> const &get_shrunken_circuits() const
+	std::vector<OddCircuit::SharedPtr> const &get_shrunken_circuits() const
 	{
 		return shrunken_circuits;
 	}
@@ -119,10 +119,10 @@ public:
 		partition_classes = create_0_to_n_minus_one<PartitionClassId>(num_nodes());
 		pseudo_nodes = std::vector<bool>(num_nodes(), false);
 		shrunken_circuits.clear();
-		circuits_by_node = std::vector<std::vector<UnevenCircuit::SharedPtr>>(num_nodes());
+		circuits_by_node = std::vector<std::vector<OddCircuit::SharedPtr>>(num_nodes());
 	}
 
-	std::vector<UnevenCircuit::SharedPtr> const &get_circuits(NodeId const node_id) const
+	std::vector<OddCircuit::SharedPtr> const &get_circuits(NodeId const node_id) const
 	{
 		return circuits_by_node.at(node_id);
 	}
@@ -156,10 +156,10 @@ private:
 
 	std::vector<PartitionClassId> partition_classes;
 	std::vector<bool> pseudo_nodes;
-	std::vector<UnevenCircuit::SharedPtr> shrunken_circuits;
+	std::vector<OddCircuit::SharedPtr> shrunken_circuits;
 	std::vector<NodeId> const node_ids;
 	std::vector<bool> active_nodes;
-	std::vector<std::vector<UnevenCircuit::SharedPtr>> circuits_by_node;
+	std::vector<std::vector<OddCircuit::SharedPtr>> circuits_by_node;
 	Edge::Vector edges;
 	size_t num_active_nodes;
 };

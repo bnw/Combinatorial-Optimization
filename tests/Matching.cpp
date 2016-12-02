@@ -49,13 +49,3 @@ BOOST_FIXTURE_TEST_CASE(Augment, K4Fixture)
 	BOOST_CHECK(M.is_covered(0));
 	BOOST_CHECK(M.is_covered(3));
 }
-
-//BOOST_FIXTURE_TEST_CASE(unshrink, K5Fixture)
-//{
-//	Matching M(G);
-//	UnevenCircuit circuit_1{G, {{0,1},{1,2},{2,0}}};
-//	G.shrink_circuit(circuit_1);
-//	M.add_edge({2,3});
-//	auto const M_unshrinked = M.unshrink();
-//	BOOST_TEST(2 == M_unshrinked.get_num_edges());
-//}

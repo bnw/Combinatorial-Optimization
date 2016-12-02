@@ -10,9 +10,9 @@ MatchingUnshrinkAlgorithm::MatchingUnshrinkAlgorithm(
 		: M(M),
 		  graph(graph),
 		  num_circuits(graph.get_shrunken_circuits().size()),
+		  nodes_to_expand(M.get_covered_nodes()),
 		  circuits_at_node_have_already_been_expanded(graph.num_nodes(), false),
 		  circuit_already_expanded(num_circuits, false),
-		  nodes_to_expand(M.get_covered_nodes()),
 		  index_of_outermost_circuit_that_might_not_be_expanded((int) num_circuits - 1)
 {
 	if (nodes_to_expand.empty()) {
@@ -47,7 +47,7 @@ void MatchingUnshrinkAlgorithm::expand_outermost_circuit()
 	}
 }
 
-void MatchingUnshrinkAlgorithm::expand_circuit(UnevenCircuit const &circuit, NodeId const exposed_node)
+void MatchingUnshrinkAlgorithm::expand_circuit(OddCircuit const &circuit, NodeId const exposed_node)
 {
 	circuit_already_expanded.at(circuit.get_id()) = true;
 	auto const new_matching_edges = circuit.get_matching_edges_that_expose_one(exposed_node);

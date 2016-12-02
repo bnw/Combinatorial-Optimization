@@ -15,8 +15,8 @@ BOOST_FIXTURE_TEST_CASE(ShrinkingEdge, K4Fixture)
 
 BOOST_FIXTURE_TEST_CASE(ShrinkingCircuit, K5Fixture)
 {
-	UnevenCircuit circuit_1{G, {{0,1},{1,2},{2,0}}};
-	UnevenCircuit circuit_2{G, {{2,3},{3,4},{4,2}}};
+	OddCircuit circuit_1{G, {{0,1},{1,2},{2,0}}};
+	OddCircuit circuit_2{G, {{2,3},{3,4},{4,2}}};
 	G.shrink_circuit(circuit_1);
 	G.shrink_circuit(circuit_2);
 	BOOST_CHECK(circuit_1 == *G.get_shrunken_circuits().at(0));

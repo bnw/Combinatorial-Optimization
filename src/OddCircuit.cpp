@@ -1,8 +1,8 @@
 #include <set>
-#include "UnevenCircuit.h"
+#include "OddCircuit.h"
 #include "ShrinkableGraph.h"
 
-UnevenCircuit::UnevenCircuit(ShrinkableGraph const &graph, std::vector<Edge> const &edges)
+OddCircuit::OddCircuit(ShrinkableGraph const &graph, std::vector<Edge> const &edges)
 		: graph(graph),
 		  edges(edges),
 		  id(0)
@@ -14,7 +14,7 @@ UnevenCircuit::UnevenCircuit(ShrinkableGraph const &graph, std::vector<Edge> con
 	assert(edges.size() % 2 == 1);
 }
 
-Edge::Vector UnevenCircuit::get_matching_edges_that_expose_one(NodeId const exposed_node_id) const
+Edge::Vector OddCircuit::get_matching_edges_that_expose_one(NodeId const exposed_node_id) const
 {
 	std::vector<size_t> const edge_positions = create_0_to_n_minus_one(edges.size());
 	std::vector<size_t> position_matching_of_edges;
@@ -62,22 +62,22 @@ Edge::Vector UnevenCircuit::get_matching_edges_that_expose_one(NodeId const expo
 	return transform<Edge>(position_matching_of_edges, [&](size_t i) { return edges.at(i); });
 }
 
-Edge::Vector const &UnevenCircuit::get_edges() const
+Edge::Vector const &OddCircuit::get_edges() const
 {
 	return edges;
 }
 
-std::vector<NodeId> UnevenCircuit::get_node_ids() const
+std::vector<NodeId> OddCircuit::get_node_ids() const
 {
 	return transform<NodeId>(get_edges(), [](Edge const &edge) { return edge.first_node_id(); });
 }
 
-bool UnevenCircuit::operator==(UnevenCircuit const &rhs) const
+bool OddCircuit::operator==(OddCircuit const &rhs) const
 {
 	return edges == rhs.edges;
 }
 
-bool UnevenCircuit::edges_form_a_circuit() const
+bool OddCircuit::edges_form_a_circuit() const
 {
 	for (auto edge_it = edges.begin(); edge_it != edges.end() - 1; edge_it++) {
 		if (not graph.are_equal(edge_it->second_node_id(), (edge_it + 1)->first_node_id())) {
@@ -89,7 +89,7 @@ bool UnevenCircuit::edges_form_a_circuit() const
 }
 
 template<typename Iterator>
-std::vector<typename Iterator::value_type> UnevenCircuit::take_every_second(
+std::vector<typename Iterator::value_type> OddCircuit::take_every_second(
 		Iterator iterator,
 		Iterator const &end,
 		std::function<bool(typename Iterator::value_type const &)> const &filter
@@ -108,12 +108,12 @@ std::vector<typename Iterator::value_type> UnevenCircuit::take_every_second(
 	return result;
 }
 
-void UnevenCircuit::set_id(size_t id)
+void OddCircuit::set_id(size_t id)
 {
-	UnevenCircuit::id = id;
+	OddCircuit::id = id;
 }
 
-size_t UnevenCircuit::get_id() const
+size_t OddCircuit::get_id() const
 {
 	return id;
 }

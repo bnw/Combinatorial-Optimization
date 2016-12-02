@@ -27,7 +27,7 @@ public:
 
 	void add_edge(Edge const &edge);
 
-	void shrink_circuit(UnevenCircuit const &C);
+	void shrink_circuit(OddCircuit const &C);
 
 	Edge::Vector find_path_from_root_to_node(NodeId const node_id) const;
 

@@ -33,7 +33,7 @@ public:
 					auto circuit_edges = T->find_path(even_vertices.at(0), even_vertices.at(1));
 					circuit_edges.push_back({even_vertices.at(1), even_vertices.at(0)});
 					//TODO
-					UnevenCircuit C(G, circuit_edges);
+					OddCircuit C(G, circuit_edges);
 					for (auto const node_id : C.get_node_ids()) {
 						assert(T->contains_node(node_id));
 						if (T->is_odd(node_id)) {

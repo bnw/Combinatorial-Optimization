@@ -12,12 +12,12 @@
 
 class ShrinkableGraph;
 
-class UnevenCircuit
+class OddCircuit
 {
 public:
-	using SharedPtr = std::shared_ptr<UnevenCircuit>;
+	using SharedPtr = std::shared_ptr<OddCircuit>;
 
-	UnevenCircuit(
+	OddCircuit(
 			ShrinkableGraph const &graph,
 			std::vector<Edge> const &edges
 	);
@@ -28,7 +28,7 @@ public:
 
 	std::vector<NodeId> get_node_ids() const;
 
-	bool operator==(UnevenCircuit const &rhs) const;
+	bool operator==(OddCircuit const &rhs) const;
 
 	void set_id(size_t id);
 

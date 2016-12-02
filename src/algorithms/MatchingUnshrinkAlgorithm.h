@@ -28,12 +28,12 @@ private:
 	/**
 	 * Note: Amortized runtime over all calls to this function will be O(m).
 	 */
-	void expand_outermost_circuit();;
+	void expand_outermost_circuit();
 
 	/**
 	 * Complexity: O(|circuit.edges|)
 	 */
-	void expand_circuit(UnevenCircuit const &circuit, NodeId const exposed_node);
+	void expand_circuit(OddCircuit const &circuit, NodeId const exposed_node);
 
 	/**
 	 * Adds new_edges to M and also queues all nodes of the edges for expansion,
