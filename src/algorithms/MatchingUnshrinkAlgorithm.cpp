@@ -67,7 +67,7 @@ void MatchingUnshrinkAlgorithm::expand_circuits_at_node(NodeId const node_id)
 	if (circuits_at_node_have_already_been_expanded.at(node_id)) {
 		return;
 	}
-	for (auto const &circuit : graph.get_circuits(node_id)) {
+	for (auto const &circuit : graph.get_shrunken_circuits(node_id)) {
 		if (circuit_already_expanded.at(circuit->get_id())) {
 			continue;
 		}
