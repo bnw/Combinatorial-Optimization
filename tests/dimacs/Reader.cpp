@@ -1,8 +1,5 @@
-#include <dimacs/Reader.h>
-//#include <boost/tests/unit_test_suite.hpp>
-//#include <boost/tests/test_tools.hpp>
-
 #include <boost/test/unit_test.hpp>
+#include <dimacs/Reader.h>
 
 using namespace dimacs;
 
