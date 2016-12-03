@@ -19,7 +19,7 @@ list(REMOVE_ITEM TEST_SOURCE_FILES ${MAIN_FILES})
 add_executable(task1 ${SOURCE_FILES} src/task1.cpp)
 
 #TESTS
-find_package( Boost 1.36.0 COMPONENTS unit_test_framework)
+find_package(Boost 1.59.0 COMPONENTS unit_test_framework)
 if(Boost_FOUND)
     include_directories( ${Boost_INCLUDE_DIR} )
     add_executable(tests ${SOURCE_FILES} ${TEST_SOURCE_FILES} tests/tests.cpp)
