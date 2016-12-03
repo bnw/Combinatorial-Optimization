@@ -21,19 +21,20 @@ Edge::Vector OddCircuit::get_matching_edges_that_expose_one(NodeId const exposed
 
 	for (auto edge_position_it = edge_positions.begin(); edge_position_it != edge_positions.end(); edge_position_it++) {
 		auto const &edge = edges.at(*edge_position_it);
+		auto const is_contracted_edge_fn = [&](size_t i) { return not edge_is_contracted.at(i); };
 		if (edge.first_node_id() == exposed_node_id) {
 			append(position_matching_of_edges,
 				   take_every_second(
 						   edge_position_it,
 						   edge_positions.end(),
-						   [&](size_t i) { return not edge_is_contracted.at(i); }
+						   is_contracted_edge_fn
 				   )
 			);
 			append(position_matching_of_edges,
 				   take_every_second(
 						   std::reverse_iterator<decltype(edge_position_it)>(edge_position_it),
 						   edge_positions.rend(),
-						   [&](size_t i) { return not edge_is_contracted.at(i); }
+						   is_contracted_edge_fn
 				   )
 			);
 			break;
@@ -43,14 +44,14 @@ Edge::Vector OddCircuit::get_matching_edges_that_expose_one(NodeId const exposed
 				   take_every_second(
 						   edge_position_it + 1,
 						   edge_positions.end(),
-						   [&](size_t i) { return not edge_is_contracted.at(i); }
+						   is_contracted_edge_fn
 				   )
 			);
 			append(position_matching_of_edges,
 				   take_every_second(
 						   std::reverse_iterator<decltype(edge_position_it)>(edge_position_it + 1),
 						   edge_positions.rend(),
-						   [&](size_t i) { return not edge_is_contracted.at(i); }
+						   is_contracted_edge_fn
 				   )
 			);
 			break;
@@ -88,11 +89,11 @@ bool OddCircuit::edges_form_a_circuit() const
 	return graph.are_equal(edges.back().second_node_id(), edges.front().first_node_id());
 }
 
-template<typename Iterator>
+template<typename Iterator, typename Filter>
 std::vector<typename Iterator::value_type> OddCircuit::take_every_second(
 		Iterator iterator,
 		Iterator const &end,
-		std::function<bool(typename Iterator::value_type const &)> const &filter
+		Filter &filter
 ) const
 {
 	std::vector<typename Iterator::value_type> result;

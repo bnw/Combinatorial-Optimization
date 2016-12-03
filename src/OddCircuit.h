@@ -37,11 +37,11 @@ public:
 private:
 	bool edges_form_a_circuit() const;
 
-	template<typename Iterator>
+	template<typename Iterator, typename Filter>
 	std::vector<typename Iterator::value_type> take_every_second(
 			Iterator iterator,
 			Iterator const &end,
-			std::function<bool(typename Iterator::value_type const &)> const &filter
+			Filter &filter
 	) const;
 
 	ShrinkableGraph const &graph;
