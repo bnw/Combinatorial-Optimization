@@ -1,76 +1,59 @@
 #include <iostream>
 #include <fstream>
 #include <graph.hpp>
-#include <numeric>
 #include <utils.h>
-#include <set>
 #include <cassert>
 #include <memory>
 #include <dimacs/Reader.h>
+#include <dimacs/Writer.h>
 #include "Matching.h"
 #include "AlternatingTree.h"
 #include "ShrinkableGraph.h"
 #include "utils.h"
 #include "OddCircuit.h"
 #include "algorithms/CardinalityMatchingAlgorithm.h"
+#include "MatchingFactory.h"
 
+void print_usage(const char *argv[])
+{
+	std::cout << "Usage: " << argv[0] << " --graph file1.dmx [--hint file2.dmx]" << std::endl;
+}
 
 int main(int argc, const char *argv[])
 {
-
-
-	struct Instance
-	{
-		std::string name;
-		std::size_t max_cardinality;
-	};
-
-	std::vector<Instance> instances = {
-//			{"ar9152",   4349},
-//			{"ch71009",        35025},
-//			{"ei8246",         4123},
-			{"fixed",      500},
-//			{"gr9882",         4931},
-			{"K2",         1},
-			{"K3",         1},
-			{"K4",         2},
-			{"lu980",      490},
-			{"P3",         2},
-			{"pbd984",     492},
-			{"peterson",   5},
-			{"pma343",     171},
-			{"queen10_10", 50},
-			{"queen11_11", 60},
-			{"queen16_16", 128},
-			{"queen27_27", 364},
-			{"queen4_4",   8},
-			{"queen5_5",   12},
-			{"queen6_6",   18},
-			{"queen7_7",   24},
-			{"queen8_8",   32},
-			{"queen9_9",   40},
-			{"simple",     2},
-//			{"USA-road-d.FLA", 507967},
-//		{"USA-road-d.USA", 0},
-			{"xqf131",     64}
-	};
-
-
-	for (auto const &instance : instances) {
+	try {
+		algorithms::CardinalityMatchingAlgorithm const algorithm{};
+		MatchingFactory const matching_factory{};
 		dimacs::Reader const reader{};
-		std::ifstream file("instances\\" + instance.name + ".dmx");
-		auto G = reader.read(file);
-		auto const M = algorithms::CardinalityMatchingAlgorithm().run(*G);
-		std::cout << instance.name << ": " << M.get_num_edges() << std::endl;
-		assert(instance.max_cardinality == M.get_num_edges());
+		dimacs::Writer const writer{};
+		switch (argc) {
+			case 3 : {
+				std::ifstream file(argv[2]);
+				auto G = reader.read(file);
+				auto const M = algorithm.run(*G);
+				writer.write(*G, M, std::cout);
+				break;
+			}
+			case 5: {
+				std::ifstream graph_file(argv[2]);
+				std::ifstream hint_matching_file(argv[4]);
+				auto G = reader.read(graph_file);
+				auto const hint_matching_graph = reader.read(hint_matching_file);
+				auto hint_matching = matching_factory.create_from_subgraph(*G, *hint_matching_graph);
+				auto const M = algorithm.run(*G, hint_matching);
+				writer.write(*G, M, std::cout);
+				break;
+			}
+			default:
+				print_usage(argv);
+		}
+	} catch (std::exception const &exception) {
+		std::cout << "Exception: " << exception.what() << std::endl;
+		return EXIT_FAILURE;
+	} catch (...) {
+		std::cout << "Unknown exception" << std::endl;
+		return EXIT_FAILURE;
 	}
-
-//	dimacs::Reader const reader{};
-//	std::ifstream file(argv[1]);
-//	auto G = reader.read(file);
-//	auto const M = CardinalityMatchingAlgorithm().run(*G);
-//	std::cout << argv[1] << ": " << M.get_num_edges() << std::endl;
-
 
 	return EXIT_SUCCESS;
 }
