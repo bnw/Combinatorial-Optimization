@@ -37,7 +37,7 @@ private:
 
 	/**
 	 * Adds new_edges to M and also queues all nodes of the edges for expansion,
-	 * by addomg them to nodes_to_expand.
+	 * by adding them to nodes_to_expand.
 	 */
 	void add_matching_edges(Edge::Vector const &new_edges);
 
