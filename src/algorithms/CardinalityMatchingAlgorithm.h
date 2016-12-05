@@ -47,6 +47,8 @@ private:
 			Edge::Vector &L
 	) const;
 
+	void greedy_matching(Matching &M, ShrinkableGraph const &G) const;
+
 };
 
 }

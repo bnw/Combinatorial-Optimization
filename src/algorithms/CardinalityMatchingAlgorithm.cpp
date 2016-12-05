@@ -10,6 +10,7 @@ Matching algorithms::CardinalityMatchingAlgorithm::run(ShrinkableGraph &G) const
 
 Matching algorithms::CardinalityMatchingAlgorithm::run(ShrinkableGraph &G, Matching &M) const
 {
+	greedy_matching(M, G);
 	while (M.has_exposed_vertex()) {
 		Edge::Vector L;
 		auto T = reset_alternating_tree(M, G, L);
@@ -109,5 +110,21 @@ algorithms::CardinalityMatchingAlgorithm::reset_alternating_tree(Matching const 
 	L = G.get_incident_edges(r);
 	return std::unique_ptr<AlternatingTree>(new AlternatingTree(G, r));
 }
+
+void CardinalityMatchingAlgorithm::greedy_matching(Matching &M, ShrinkableGraph const &G) const
+{
+	for (size_t node_id = 0; node_id < G.num_nodes(); node_id++) {
+		if (M.is_covered(node_id)) {
+			continue;
+		}
+		for (auto const neighbor_node_id : G.node(node_id).neighbors()) {
+			if (not M.is_covered(neighbor_node_id)) {
+				M.add_edge({node_id, neighbor_node_id});
+				break;
+			}
+		}
+	}
+}
+
 }
 
