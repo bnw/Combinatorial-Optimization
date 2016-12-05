@@ -18,157 +18,48 @@ public:
 			graph(graph)
 	{}
 
-	std::vector<NodeId> get_covered_nodes() const
-	{
-		std::vector<NodeId> covered_nodes;
-		for (NodeId node_id = 0; node_id < graph.num_nodes(); node_id++) {
-			if (is_covered(node_id)) {
-				covered_nodes.push_back(node_id);
-			}
-		}
-		return covered_nodes;
-	}
+	std::vector<NodeId> get_covered_nodes() const;
 
-	void add_edges(Edge::Vector const &edges)
-	{
-		for (auto const &edge :edges) {
-			add_edge(edge);
-		}
-	}
+	void add_edges(Edge::Vector const &edges);
 
-	void add_edge(Edge const &edge)
-	{
-		assert(graph.is_active(edge));
-		for (auto const node_id : edge.get_node_ids()) {
-			assert(not is_covered(node_id));
-			assert(get_covering_edge(node_id).is_invalid_edge());
-			set_covered(node_id, true);
-			set_covering_edge(node_id, edge);
-		}
-		num_edges++;
-	}
+	void add_edge(Edge const &edge);
 
-	void remove_edge(Edge const &edge)
-	{
-		assert(graph.is_active(edge));
-		for (auto const node_id : edge.get_node_ids()) {
-			assert(is_covered(node_id));
-			assert(get_covering_edge(node_id) == edge);
-			set_covered(node_id, false);
-			set_covering_edge(node_id, Edge::invalid_edge());
-		}
-		num_edges--;
-		assert(num_edges >= 0);
-	}
+	void remove_edge(Edge const &edge);
 
-	void remove_edges_if_contained(Edge::Vector const &edges)
-	{
-		for (auto const &edge: edges) {
-			assert(graph.is_active(edge));
-			if (contains_edge(edge)) {
-				remove_edge(edge);
-			}
-		}
-	}
+	void remove_edges_if_contained(Edge::Vector const &edges);
 
-	bool is_covered(NodeId const node_id) const
-	{
-		return covered_nodes.at(node_id);
-	}
+	bool is_covered(NodeId const node_id) const;
 
-	bool is_exposed(NodeId const node_id) const
-	{
-		return not is_covered(node_id);
-	}
+	bool is_exposed(NodeId const node_id) const;
 
-	void augment(Edge::Vector const &augmenting_path)
-	{
-		Edge::Vector new_edges;
-		for (auto const &edge : augmenting_path) {
-			assert(graph.is_active(edge));
-			if (contains_edge(edge)) {
-				remove_edge(edge);
-			} else {
-				new_edges.push_back(edge);
-			}
-		}
-		assert(new_edges.size() == augmenting_path.size() / 2 + 1);
-		add_edges(new_edges);
+	void augment(Edge::Vector const &augmenting_path);
 
-	}
+	bool contains_edge(Edge const &edge) const;
 
-	bool contains_edge(Edge const &edge) const
-	{
-		if (covering_edges.at(edge.first_node_id()) == edge) {
-			assert(covering_edges.at(edge.second_node_id()) == edge);
-			return true;
-		}
-		return false;
-	}
+	bool has_exposed_vertex() const;
 
-	bool has_exposed_vertex() const
-	{
-		for (NodeId node_id = 0; node_id < graph.num_nodes(); node_id++) {
-			if (is_exposed(node_id) and graph.is_active(node_id)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	/**
+	 * Returns a node that is exposed and not
+	 * deactivated (according to graph.is_active(node_id)).
+	 * @return
+	 */
+	NodeId get_one_exposed() const;
 
-	//TODO runtime?
-	NodeId get_one_exposed() const
-	{
-		for (NodeId node_id = 0; node_id < graph.num_nodes(); node_id++) {
-			if (is_exposed(node_id) and graph.is_active(node_id)) {
-				assert(not graph.is_pseudo_node(node_id));
-				return node_id;
-			}
-		}
-		assert(false);
-		return 0;
-	}
+	bool is_perfect() const;
 
-	bool is_perfect() const
-	{
-		assert(num_edges >= 0);
-		return ((size_t) num_edges) * 2 == covered_nodes.size();
-	}
+	int get_num_edges() const;
 
-	int get_num_edges() const
-	{
-		return num_edges;
-	}
+	Edge const &get_covering_edge(NodeId const node_id) const;
 
-	Edge const &get_covering_edge(NodeId const node_id) const
-	{
-		return covering_edges.at(node_id);
-	}
-
-	void set_covering_edge(NodeId const node_id, Edge const &edge)
-	{
-		covering_edges.at(node_id) = edge;
-	}
+	void set_covering_edge(NodeId const node_id, Edge const &edge);
 
 	/**
 	 * Not: Could be implemented faster (but is only used for the output).
 	 */
-	Edge::Set get_edges() const
-	{
-		Edge::Set edges{};
-		for (auto const &edge : covering_edges) {
-			if (not edge.is_invalid_edge()) {
-				edges.insert(edge);
-			}
-		}
-		return edges;
-	}
+	Edge::Set get_edges() const;
 
 private:
-	void set_covered(NodeId const node_id, bool const covered)
-	{
-		covered_nodes.at(node_id) = covered;
-	}
+	void set_covered(NodeId const node_id, bool const covered);
 
 	std::vector<Edge> covering_edges;
 	std::vector<bool> covered_nodes;
