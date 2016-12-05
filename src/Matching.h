@@ -150,6 +150,20 @@ public:
 		covering_edges.at(node_id) = edge;
 	}
 
+	/**
+	 * Not: Could be implemented faster (but is only used for the output).
+	 */
+	Edge::Set get_edges() const
+	{
+		Edge::Set edges{};
+		for (auto const &edge : covering_edges) {
+			if (not edge.is_invalid_edge()) {
+				edges.insert(edge);
+			}
+		}
+		return edges;
+	}
+
 private:
 	void set_covered(NodeId const node_id, bool const covered)
 	{
