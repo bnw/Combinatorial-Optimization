@@ -31,7 +31,7 @@ std::unique_ptr<ShrinkableGraph> Reader::read(std::istream &input) const
 		}
 	}
 	if(not graph){
-		throw "Error while reading graph";
+		throw std::runtime_error("Error while reading graph");
 	}
 	return graph;
 }
