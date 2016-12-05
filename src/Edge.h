@@ -6,6 +6,7 @@
 #include <graph.hpp>
 #include <utility>
 #include <cassert>
+#include <set>
 #include "typedefs.h"
 
 class Edge
@@ -13,6 +14,7 @@ class Edge
 public:
 	using Vector = std::vector<Edge>;
 	using List = std::list<Edge>;
+	using Set = std::set<Edge>;
 
 	Edge(NodeId const first_node_id, NodeId const second_node_id) :
 			node_ids({first_node_id, second_node_id})
