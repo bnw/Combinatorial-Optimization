@@ -1,5 +1,7 @@
 # Combinatorial-Optimization
 Combinatorial Optimization WS 2016/2017 
+http://www.or.uni-bonn.de/lectures/ws16/cows16.html   
+Implementation of a cardinality matching algorithm with runtime O(n m logn)
 
 Compile with cmake (cool)
 -------------------------
@@ -21,6 +23,8 @@ To compile the main program using this makefile simply run:
 Usage
 -----
 `./task1 --graph file1.dmx [--hint file2.dmx]`
+
+Graph must be provided in DIMACS format.
 
 Tests
 -----
